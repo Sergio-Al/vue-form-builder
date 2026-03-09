@@ -6,7 +6,7 @@ A dynamic form builder and renderer — a mini Typeform/Google Forms app. Admins
 
 | Layer    | Technology                                       |
 | -------- | ------------------------------------------------ |
-| Frontend | Vue 3, Vite, TypeScript, Tailwind CSS, Vueform   |
+| Frontend | Vue 3, Vite, TypeScript, Tailwind CSS, Vueform, vue-draggable-plus |
 | Backend  | NestJS, TypeORM                                  |
 | Database | PostgreSQL 16 (Docker Compose), `jsonb` columns  |
 | State    | Pinia                                            |
@@ -20,7 +20,7 @@ vue-form-project/
 ├── frontend/          # Vue 3 + Vueform + Tailwind
 │   ├── src/
 │   │   ├── pages/           # FormsList, FormBuilder, FormRenderer, ResponsesList
-│   │   ├── components/      # FieldEditor, FormPreview
+│   │   ├── components/      # CanvasFieldCard, FieldEditor, FieldPalette, FormPreview
 │   │   ├── composables/     # useSchemaBuilder (fields[] ↔ Vueform schema)
 │   │   ├── services/        # Axios API client
 │   │   ├── router/          # Vue Router config
@@ -66,18 +66,51 @@ Schemas are stored as Vueform-compatible JSON objects and rendered directly with
 | `/forms/:id/responses`  | ResponsesList   | Admin: view form responses     |
 | `/f/:id`                | FormRenderer    | Public: fill & submit a form   |
 
+## Environment Variables
+
+Both `backend/` and `frontend/` require `.env` files. Copy the examples and fill in your values:
+
+```bash
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
+```
+
+**Backend** (`backend/.env`):
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `PORT` | `3000` | Server port |
+| `CORS_ORIGIN` | `http://localhost:5174` | Allowed frontend origin |
+| `DB_HOST` | `localhost` | PostgreSQL host |
+| `DB_PORT` | `5432` | PostgreSQL port |
+| `DB_USER` | `postgres` | Database user |
+| `DB_PASS` | `postgres` | Database password |
+| `DB_NAME` | `vueform_builder` | Database name |
+
+**Frontend** (`frontend/.env`):
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `VITE_API_BASE_URL` | `http://localhost:3000/api` | Backend API URL |
+| `VITE_VUEFORM_API_KEY` | — | Free API key from [app.vueform.com](https://app.vueform.com) |
+
 ## Running Locally
 
 ```bash
 # 1. Start the database
 docker compose up -d
 
-# 2. Start the backend (port 3000)
+# 2. Set up environment variables
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
+# Edit frontend/.env and add your Vueform API key
+
+# 3. Start the backend (port 3000)
 cd backend
 npm install
 npm run start:dev
 
-# 3. Start the frontend (port 5174)
+# 4. Start the frontend (port 5174)
 cd frontend
 npm install
 npm run dev
@@ -86,7 +119,8 @@ npm run dev
 ## Key Design Decisions
 
 - **No auth for MVP** — all routes are public
-- **Free Vueform** — custom builder UI instead of the paid Builder plugin; requires a free API key from [app.vueform.com](https://app.vueform.com)
+- **Free Vueform** — custom drag-to-canvas builder UI instead of the paid Builder plugin; requires a free API key from [app.vueform.com](https://app.vueform.com)
+- **Drag-and-drop** — fields are dragged from a palette into a center canvas, reordered by dragging, and edited via a static right-side properties panel
 - **Schema = Vueform format** — the DB stores the exact JSON object Vueform consumes
 - **Submit button in schema** — the builder auto-appends it; the renderer uses `@submit` with `:endpoint="false"`
 - **`/api/` prefix** — all backend routes namespaced to avoid frontend route conflicts
