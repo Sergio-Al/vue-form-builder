@@ -6,6 +6,7 @@ import {
   Param,
   ParseUUIDPipe,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { ResponsesService } from './responses.service';
 import { CreateResponseDto } from './dto/create-response.dto';
 
@@ -14,6 +15,7 @@ export class ResponsesController {
   constructor(private readonly responsesService: ResponsesService) {}
 
   @Post('responses')
+  @Throttle({ default: { ttl: 60000, limit: 5 } })
   create(@Body() dto: CreateResponseDto) {
     return this.responsesService.create(dto);
   }

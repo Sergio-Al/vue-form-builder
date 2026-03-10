@@ -4,6 +4,11 @@ import { Repository } from 'typeorm';
 import { Response } from './response.entity';
 import { CreateResponseDto } from './dto/create-response.dto';
 import { FormsService } from '../forms/forms.service';
+import {
+  validateResponseData,
+  sanitizeResponseData,
+} from './validate-response';
+import type { Rule } from './evaluate-conditions';
 
 @Injectable()
 export class ResponsesService {
@@ -15,8 +20,16 @@ export class ResponsesService {
 
   async create(dto: CreateResponseDto): Promise<Response> {
     // Validates form exists (throws NotFoundException if not)
-    await this.formsService.findOne(dto.formId);
-    const response = this.responseRepo.create(dto);
+    const form = await this.formsService.findOne(dto.formId);
+
+    // Validate & sanitize response data against form schema + rules
+    const validatedData = validateResponseData(form.schema, dto.data, (form.rules ?? []) as Rule[]);
+    const cleanData = sanitizeResponseData(validatedData);
+
+    const response = this.responseRepo.create({
+      formId: dto.formId,
+      data: cleanData,
+    });
     return this.responseRepo.save(response);
   }
 

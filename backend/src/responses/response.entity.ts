@@ -13,12 +13,12 @@ export class Response {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('uuid')
-  formId: string;
+  @Column({ type: 'uuid', nullable: true })
+  formId: string | null;
 
-  @ManyToOne(() => Form, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Form, { onDelete: 'SET NULL', nullable: true })
   @JoinColumn({ name: 'formId' })
-  form: Form;
+  form: Form | null;
 
   @Column({ type: 'jsonb' })
   data: Record<string, any>;

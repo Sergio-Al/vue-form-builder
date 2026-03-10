@@ -20,6 +20,9 @@ export class Form {
   @Column({ type: 'jsonb' })
   schema: Record<string, any>;
 
+  @Column({ type: 'jsonb', default: [] })
+  rules: Record<string, any>[];
+
   @CreateDateColumn()
   createdAt: Date;
 

@@ -12,13 +12,29 @@ const loading = ref(true)
 
 const columns = computed(() => {
   if (!form.value?.schema) return []
-  return Object.entries(form.value.schema)
-    .filter(([, config]) => config.type !== 'button')
-    .map(([name, config]) => ({
-      key: name,
-      label: (config as any).label || name,
-    }))
+  return flattenSchemaColumns(form.value.schema)
 })
+
+function flattenSchemaColumns(
+  schema: Record<string, any>,
+  prefix = '',
+  parentLabel = '',
+): { key: string; label: string }[] {
+  const result: { key: string; label: string }[] = []
+  for (const [name, config] of Object.entries(schema)) {
+    if ((config as any).type === 'button') continue
+    const fullKey = prefix ? `${prefix}.${name}` : name
+    if ((config as any).type === 'group' && (config as any).schema) {
+      const groupLabel = (config as any).label || name
+      result.push(...flattenSchemaColumns((config as any).schema, fullKey, groupLabel))
+    } else {
+      const fieldLabel = (config as any).label || name
+      const label = parentLabel ? `${parentLabel} › ${fieldLabel}` : fieldLabel
+      result.push({ key: fullKey, label })
+    }
+  }
+  return result
+}
 
 onMounted(async () => {
   try {
@@ -42,6 +58,10 @@ function displayValue(value: any): string {
   if (typeof value === 'boolean') return value ? 'Yes' : 'No'
   if (Array.isArray(value)) return value.join(', ')
   return String(value)
+}
+
+function getNestedValue(data: Record<string, any>, path: string): any {
+  return path.split('.').reduce((obj, key) => obj?.[key], data)
 }
 </script>
 
@@ -93,7 +113,7 @@ function displayValue(value: any): string {
                 :key="col.key"
                 class="px-4 py-3 text-sm text-gray-900"
               >
-                {{ displayValue(resp.data[col.key]) }}
+                {{ displayValue(getNestedValue(resp.data, col.key)) }}
               </td>
               <td class="px-4 py-3 text-sm text-gray-500">
                 {{ formatDate(resp.createdAt) }}

@@ -82,6 +82,12 @@ function formatDate(dateStr: string) {
               View
             </a>
             <RouterLink
+              :to="`/forms/${form.id}/rules`"
+              class="px-3 py-1.5 text-sm border border-amber-300 text-amber-600 rounded hover:bg-amber-50"
+            >
+              Rules
+            </RouterLink>
+            <RouterLink
               :to="`/forms/${form.id}/responses`"
               class="px-3 py-1.5 text-sm border border-indigo-300 text-indigo-600 rounded hover:bg-indigo-50"
             >

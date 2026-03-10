@@ -13,6 +13,7 @@ export interface FormSummary {
 
 export interface FormDetail extends FormSummary {
   schema: Record<string, any>
+  rules: Record<string, any>[]
   updatedAt: string
 }
 
@@ -30,8 +31,10 @@ export const getForm = (id: string) => api.get<FormDetail>(`/forms/${id}`)
 export const createForm = (data: { name: string; description?: string; schema: Record<string, any> }) =>
   api.post<FormDetail>('/forms', data)
 
-export const updateForm = (id: string, data: { name?: string; description?: string; schema?: Record<string, any> }) =>
-  api.put<FormDetail>(`/forms/${id}`, data)
+export const updateForm = (
+  id: string,
+  data: { name?: string; description?: string; schema?: Record<string, any>; rules?: Record<string, any>[] },
+) => api.put<FormDetail>(`/forms/${id}`, data)
 
 export const deleteForm = (id: string) => api.delete(`/forms/${id}`)
 

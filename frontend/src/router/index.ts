@@ -23,6 +23,11 @@ const router = createRouter({
       component: () => import('@/pages/FormBuilder.vue'),
     },
     {
+      path: '/forms/:id/rules',
+      name: 'rules-editor',
+      component: () => import('@/pages/RulesEditor.vue'),
+    },
+    {
       path: '/forms/:id/responses',
       name: 'forms-responses',
       component: () => import('@/pages/ResponsesList.vue'),

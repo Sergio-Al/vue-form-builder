@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter, RouterLink } from 'vue-router'
 import { VueDraggable } from 'vue-draggable-plus'
 import CanvasFieldCard from '@/components/CanvasFieldCard.vue'
+import CanvasGroupCard from '@/components/CanvasGroupCard.vue'
 import FieldEditor from '@/components/FieldEditor.vue'
 import FieldPalette from '@/components/FieldPalette.vue'
 import FormPreview from '@/components/FormPreview.vue'
@@ -10,6 +11,7 @@ import {
   useSchemaBuilder,
   schemaToFields,
   createEmptyField,
+  generateFieldId,
   type FieldConfig,
 } from '@/composables/useSchemaBuilder'
 import { createForm, updateForm, getForm } from '@/services/api'
@@ -23,12 +25,19 @@ const fields = ref<FieldConfig[]>([])
 const saving = ref(false)
 const loading = ref(false)
 const dragging = ref(false)
-const selectedIndex = ref<number | null>(null)
+const selectedPath = ref<{ parent: number; child?: number } | null>(null)
 const showPreview = ref(false)
+const showSchema = ref(false)
+const schemaCopied = ref(false)
 
-const selectedField = computed(() =>
-  selectedIndex.value !== null ? fields.value[selectedIndex.value] ?? null : null,
-)
+const selectedField = computed(() => {
+  if (!selectedPath.value) return null
+  const { parent, child } = selectedPath.value
+  const parentField = fields.value[parent]
+  if (!parentField) return null
+  if (child != null) return parentField.children?.[child] ?? null
+  return parentField
+})
 
 const editId = route.params.id as string | undefined
 const isEdit = Boolean(editId)
@@ -56,50 +65,85 @@ onUnmounted(() => {
 
 function onKeydown(e: KeyboardEvent) {
   if ((e.target as HTMLElement)?.tagName === 'INPUT' || (e.target as HTMLElement)?.tagName === 'TEXTAREA') return
-  if (selectedIndex.value === null) return
+  if (!selectedPath.value) return
 
-  if (e.key === 'ArrowDown') {
-    e.preventDefault()
-    selectedIndex.value = Math.min(selectedIndex.value + 1, fields.value.length - 1)
-  } else if (e.key === 'ArrowUp') {
-    e.preventDefault()
-    selectedIndex.value = Math.max(selectedIndex.value - 1, 0)
-  } else if (e.key === 'Delete' || e.key === 'Backspace') {
-    e.preventDefault()
-    removeField(selectedIndex.value)
+  const { parent, child } = selectedPath.value
+
+  if (child != null) {
+    const siblings = fields.value[parent]?.children ?? []
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      selectedPath.value = { parent, child: Math.min(child + 1, siblings.length - 1) }
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      selectedPath.value = { parent, child: Math.max(child - 1, 0) }
+    } else if (e.key === 'Delete' || e.key === 'Backspace') {
+      e.preventDefault()
+      removeChildField(parent, child)
+    }
+  } else {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      selectedPath.value = { parent: Math.min(parent + 1, fields.value.length - 1) }
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      selectedPath.value = { parent: Math.max(parent - 1, 0) }
+    } else if (e.key === 'Delete' || e.key === 'Backspace') {
+      e.preventDefault()
+      removeField(parent)
+    }
   }
 }
 
 function onCanvasAdd(evt: { newIndex?: number }) {
   if (evt.newIndex == null) return
   const raw = fields.value[evt.newIndex]
+
   if (raw && !('name' in raw && 'label' in raw && 'options' in raw)) {
+    // From palette — create proper field
     fields.value[evt.newIndex] = createEmptyField((raw as any).type)
   }
-  selectedIndex.value = evt.newIndex
+
+  selectedPath.value = { parent: evt.newIndex }
 }
 
-function updateField(index: number, field: FieldConfig) {
-  fields.value[index] = field
+function updateField(path: { parent: number; child?: number }, field: FieldConfig) {
+  if (path.child != null) {
+    const parent = fields.value[path.parent]
+    if (!parent?.children) return
+    parent.children[path.child] = field
+  } else {
+    fields.value[path.parent] = field
+  }
 }
 
 function removeField(index: number) {
   fields.value.splice(index, 1)
   if (fields.value.length === 0) {
-    selectedIndex.value = null
-  } else if (selectedIndex.value !== null) {
-    if (index === selectedIndex.value) {
-      selectedIndex.value = Math.min(index, fields.value.length - 1)
-    } else if (index < selectedIndex.value) {
-      selectedIndex.value--
+    selectedPath.value = null
+  } else if (selectedPath.value && selectedPath.value.child == null) {
+    if (index === selectedPath.value.parent) {
+      selectedPath.value = { parent: Math.min(index, fields.value.length - 1) }
+    } else if (index < selectedPath.value.parent) {
+      selectedPath.value = { parent: selectedPath.value.parent - 1 }
     }
   }
 }
 
-function duplicateField(index: number) {
-  const original = fields.value[index]
-  if (!original) return
+function removeChildField(parentIndex: number, childIndex: number) {
+  const parent = fields.value[parentIndex]
+  if (!parent?.children) return
+  parent.children.splice(childIndex, 1)
+  if (parent.children.length === 0) {
+    selectedPath.value = { parent: parentIndex }
+  } else {
+    selectedPath.value = { parent: parentIndex, child: Math.min(childIndex, parent.children.length - 1) }
+  }
+}
+
+function deepCloneField(original: FieldConfig): FieldConfig {
   const copy: FieldConfig = {
+    id: generateFieldId(),
     name: original.name ? `${original.name}_copy` : '',
     type: original.type,
     label: original.label,
@@ -107,9 +151,40 @@ function duplicateField(index: number) {
     required: original.required,
     options: original.options.map((o) => ({ ...o })),
     extraRules: original.extraRules,
+    columns: original.columns,
   }
+  if (original.children) {
+    copy.children = original.children.map(deepCloneField)
+  }
+  return copy
+}
+
+function duplicateField(index: number) {
+  const original = fields.value[index]
+  if (!original) return
+  const copy = deepCloneField(original)
   fields.value.splice(index + 1, 0, copy)
-  selectedIndex.value = index + 1
+  selectedPath.value = { parent: index + 1 }
+}
+
+function updateGroupChildren(groupId: string, children: FieldConfig[]) {
+  const parent = fields.value.find(f => f.id === groupId)
+  if (!parent) return
+  parent.children = children
+}
+
+function selectGroupChild(groupId: string, childIdx: number) {
+  const groupIndex = fields.value.findIndex(f => f.id === groupId)
+  if (groupIndex !== -1) {
+    selectedPath.value = { parent: groupIndex, child: childIdx }
+  }
+}
+
+function copySchema() {
+  navigator.clipboard.writeText(JSON.stringify(schema.value, null, 2)).then(() => {
+    schemaCopied.value = true
+    setTimeout(() => (schemaCopied.value = false), 2000)
+  })
 }
 
 async function save() {
@@ -147,13 +222,22 @@ async function save() {
       <h1 class="text-2xl font-bold text-gray-900">
         {{ isEdit ? 'Edit Form' : 'New Form' }}
       </h1>
-      <button
-        class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50"
-        :disabled="saving"
-        @click="save"
-      >
-        {{ saving ? 'Saving...' : 'Save Form' }}
-      </button>
+      <div class="flex items-center gap-2">
+        <RouterLink
+          v-if="isEdit && editId"
+          :to="`/forms/${editId}/rules`"
+          class="border border-amber-300 text-amber-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-amber-50"
+        >
+          Rules
+        </RouterLink>
+        <button
+          class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50"
+          :disabled="saving"
+          @click="save"
+        >
+          {{ saving ? 'Saving...' : 'Save Form' }}
+        </button>
+      </div>
     </div>
 
     <!-- Form metadata -->
@@ -204,6 +288,18 @@ async function save() {
               </svg>
               Preview
             </button>
+            <button
+              class="flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-md transition-colors"
+              :class="showSchema
+                ? 'bg-indigo-100 text-indigo-700'
+                : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'"
+              @click="showSchema = !showSchema"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+              </svg>
+              JSON Schema
+            </button>
           </div>
 
           <!-- Drop zone -->
@@ -214,7 +310,7 @@ async function save() {
             handle=".drag-handle"
             ghost-class="ghost-field"
             chosen-class="chosen-field"
-            class="space-y-2 min-h-50 p-3 border-2 border-dashed rounded-xl transition-colors"
+            class="grid grid-cols-12 gap-2 min-h-50 p-3 border-2 border-dashed rounded-xl transition-colors"
             :class="dragging
               ? 'border-indigo-300 bg-indigo-50/30'
               : 'border-gray-200 bg-gray-50/50'"
@@ -222,15 +318,30 @@ async function save() {
             @end="dragging = false"
             @add="onCanvasAdd"
           >
-            <CanvasFieldCard
-              v-for="(field, index) in fields"
-              :key="index"
-              :field="field"
-              :selected="selectedIndex === index"
-              @select="selectedIndex = index"
-              @remove="removeField(index)"
-              @duplicate="duplicateField(index)"
-            />
+            <template v-for="(field, index) in fields" :key="field.id">
+              <CanvasGroupCard
+                v-if="field.type === 'group'"
+                :field="field"
+                :columns="field.columns ?? 12"
+                :selected="selectedPath?.parent === index && selectedPath?.child == null"
+                :selected-child-index="selectedPath?.parent === index ? selectedPath?.child ?? null : null"
+                data-group-card="true"
+                @select="selectedPath = { parent: index }"
+                @remove="removeField(index)"
+                @duplicate="duplicateField(index)"
+                @select-child="(childIdx: number) => selectGroupChild(field.id, childIdx)"
+                @update-children="(children: FieldConfig[]) => updateGroupChildren(field.id, children)"
+              />
+              <CanvasFieldCard
+                v-else
+                :field="field"
+                :columns="field.columns ?? 12"
+                :selected="selectedPath?.parent === index && selectedPath?.child == null"
+                @select="selectedPath = { parent: index }"
+                @remove="removeField(index)"
+                @duplicate="duplicateField(index)"
+              />
+            </template>
           </VueDraggable>
 
           <!-- Canvas empty state -->
@@ -248,6 +359,25 @@ async function save() {
           <div v-if="showPreview" class="mt-4">
             <FormPreview :schema="schema" />
           </div>
+
+          <!-- Toggleable JSON schema viewer -->
+          <div v-if="showSchema" class="mt-4">
+            <div class="bg-gray-900 rounded-xl overflow-hidden">
+              <div class="flex items-center justify-between px-4 py-2 bg-gray-800">
+                <span class="text-xs font-medium text-gray-400">JSON Schema</span>
+                <button
+                  class="text-xs font-medium px-2 py-1 rounded transition-colors"
+                  :class="schemaCopied
+                    ? 'text-green-400'
+                    : 'text-gray-400 hover:text-white'"
+                  @click="copySchema"
+                >
+                  {{ schemaCopied ? 'Copied!' : 'Copy' }}
+                </button>
+              </div>
+              <pre class="p-4 text-sm text-green-300 overflow-x-auto max-h-96 overflow-y-auto">{{ JSON.stringify(schema, null, 2) }}</pre>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -255,13 +385,20 @@ async function save() {
       <div class="w-80 shrink-0 border-l border-gray-200 pl-4 overflow-y-auto">
         <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Properties</h2>
 
-        <div v-if="selectedField && selectedIndex !== null">
+        <div v-if="selectedField && selectedPath !== null">
           <FieldEditor
-            :key="selectedIndex"
+            :key="`${selectedPath.parent}-${selectedPath.child ?? 'root'}`"
             :field="selectedField"
-            :index="selectedIndex"
-            @update="updateField(selectedIndex, $event)"
-            @remove="removeField(selectedIndex); selectedIndex = null"
+            :index="selectedPath.child ?? selectedPath.parent"
+            @update="updateField(selectedPath, $event)"
+            @remove="() => {
+              if (selectedPath!.child != null) {
+                removeChildField(selectedPath!.parent, selectedPath!.child)
+              } else {
+                removeField(selectedPath!.parent)
+                selectedPath = null
+              }
+            }"
           />
         </div>
 
@@ -280,13 +417,15 @@ async function save() {
 </template>
 
 <style scoped>
-.ghost-field {
+:deep(.ghost-field) {
   opacity: 0.4;
   border: 2px dashed #6366f1;
   border-radius: 0.5rem;
+  grid-column: span 12 !important;
+  min-height: 3rem;
 }
 
-.chosen-field {
+:deep(.chosen-field) {
   box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
   border-radius: 0.5rem;
 }

@@ -9,6 +9,7 @@ import {
 const props = defineProps<{
   field: FieldConfig
   selected: boolean
+  columns: number
 }>()
 
 defineEmits<{
@@ -27,15 +28,17 @@ const hasSchema = computed(() => Object.keys(fieldSchema.value).length > 0)
 
 <template>
   <div
-    class="relative rounded-lg cursor-pointer transition-all select-none group my-5"
+    class="relative rounded-lg cursor-pointer transition-all select-none group pt-6"
     :class="selected
       ? 'ring-2 ring-indigo-400 shadow-sm'
       : 'hover:ring-2 hover:ring-gray-300'"
+    :style="{ gridColumn: `span ${columns}` }"
+    :data-field-id="field.id"
     @click="$emit('select')"
   >
     <!-- Hover/select overlay with name badge + actions -->
     <div
-      class="absolute inset-x-0 -top-5 z-10 flex items-center justify-between px-1 transition-opacity"
+      class="absolute inset-x-0 top-0 z-10 flex items-center justify-between px-1 py-0.5 transition-opacity rounded-t-lg"
       :class="selected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'"
     >
       <!-- Left: drag handle + name badge -->
