@@ -8,7 +8,7 @@ const paletteItems = ref(FIELD_TYPE_CATALOG.map((entry) => ({ ...entry })))
 
 <template>
   <div>
-    <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Field Types</h2>
+    <h2 class="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">Field Types</h2>
     <VueDraggable
       v-model="paletteItems"
       :group="{ name: 'fields', pull: 'clone', put: false }"
@@ -19,10 +19,10 @@ const paletteItems = ref(FIELD_TYPE_CATALOG.map((entry) => ({ ...entry })))
       <div
         v-for="entry in paletteItems"
         :key="entry.type"
-        class="flex items-center gap-2.5 px-3 py-2.5 bg-white border border-gray-200 rounded-lg cursor-grab hover:border-indigo-300 hover:shadow-sm transition-all text-sm select-none"
+        class="flex items-center gap-2.5 px-3 py-2.5 bg-card border border-border rounded-lg cursor-grab hover:border-ring hover:shadow-sm transition-all text-sm select-none"
       >
         <span class="text-base">{{ entry.icon }}</span>
-        <span class="font-medium text-gray-700">{{ entry.label }}</span>
+        <span class="font-medium text-foreground">{{ entry.label }}</span>
       </div>
     </VueDraggable>
   </div>

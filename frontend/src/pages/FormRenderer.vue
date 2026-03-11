@@ -4,6 +4,8 @@ import { useRoute } from 'vue-router'
 import { getForm, submitResponse } from '@/services/api'
 import { useRulesEngine, injectConditionsIntoSchema } from '@/composables/useRulesEngine'
 import type { Rule } from '@/types/rules'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 
 const route = useRoute()
 const formId = route.params.id as string
@@ -122,39 +124,40 @@ async function handleSubmit(form$: any) {
 
 <template>
   <div class="max-w-2xl mx-auto">
-    <div v-if="loading" class="text-center py-12 text-gray-500">Loading form...</div>
+    <div v-if="loading" class="text-center py-12 text-muted-foreground">Loading form...</div>
 
     <div v-else-if="error" class="text-center py-12">
-      <p class="text-red-500 text-lg">{{ error }}</p>
+      <p class="text-destructive text-lg">{{ error }}</p>
     </div>
 
     <div v-else-if="submitted" class="text-center py-12">
-      <div class="bg-green-50 border border-green-200 rounded-lg p-8">
-        <h2 class="text-2xl font-bold text-green-800 mb-2">Thank you!</h2>
-        <p class="text-green-600">Your response has been submitted successfully.</p>
-        <button
-          class="mt-4 text-sm text-indigo-600 hover:text-indigo-800 underline"
+      <Card class="p-8">
+        <h2 class="text-2xl font-bold text-foreground mb-2">Thank you!</h2>
+        <p class="text-muted-foreground">Your response has been submitted successfully.</p>
+        <Button
+          variant="link"
+          class="mt-4"
           @click="submitted = false"
         >
           Submit another response
-        </button>
-      </div>
+        </Button>
+      </Card>
     </div>
 
     <div v-else-if="form">
       <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">{{ form.name }}</h1>
-        <p v-if="form.description" class="text-gray-600 mt-1">{{ form.description }}</p>
+        <h1 class="text-2xl font-bold text-foreground">{{ form.name }}</h1>
+        <p v-if="form.description" class="text-muted-foreground mt-1">{{ form.description }}</p>
       </div>
 
-      <div class="form-card bg-white border border-gray-200 rounded-xl shadow-sm p-8">
+      <Card class="form-card p-8">
         <Vueform
           :schema="enhancedSchema"
           :endpoint="false"
           @change="handleFieldChange"
           @submit="handleSubmit"
         />
-      </div>
+      </Card>
     </div>
   </div>
 </template>
@@ -173,7 +176,7 @@ async function handleSubmit(form$: any) {
 .form-card :deep(label) {
   font-size: 0.9375rem;
   font-weight: 500;
-  color: #374151;
+  color: hsl(var(--foreground));
   margin-bottom: 0.375rem;
   display: block;
 }

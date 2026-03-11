@@ -50,18 +50,18 @@ function onChildAdd(evt: { newIndex?: number }) {
   <div
     class="relative rounded-xl cursor-pointer transition-all select-none group"
     :class="selected
-      ? 'ring-2 ring-emerald-400 shadow-sm'
-      : 'hover:ring-2 hover:ring-gray-300'"
+      ? 'ring-2 ring-ring shadow-sm'
+      : 'hover:ring-2 hover:ring-border'"
     :style="{ gridColumn: `span ${columns}` }"
   >
     <!-- Group header overlay with drag handle + name badge + actions -->
     <div
-      class="flex items-center justify-between px-2 py-1.5 bg-emerald-50 border-b border-emerald-200 rounded-t-xl"
+      class="flex items-center justify-between px-2 py-1.5 bg-secondary border-b border-border rounded-t-xl"
       @click.stop="$emit('select')"
     >
       <!-- Left: drag handle + name badge -->
       <div class="flex items-center gap-1">
-        <span class="drag-handle cursor-grab active:cursor-grabbing text-emerald-400 hover:text-emerald-600 transition-colors">
+        <span class="drag-handle cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground transition-colors">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <circle cx="9" cy="5" r="1.5" /><circle cx="15" cy="5" r="1.5" />
             <circle cx="9" cy="10" r="1.5" /><circle cx="15" cy="10" r="1.5" />
@@ -69,16 +69,16 @@ function onChildAdd(evt: { newIndex?: number }) {
             <circle cx="9" cy="20" r="1.5" /><circle cx="15" cy="20" r="1.5" />
           </svg>
         </span>
-        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-500 text-white shadow-sm">
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-primary text-primary-foreground shadow-sm">
           📦 {{ field.name || 'Section' }}
         </span>
-        <span v-if="field.label" class="text-xs text-emerald-700 ml-1">{{ field.label }}</span>
+        <span v-if="field.label" class="text-xs text-muted-foreground ml-1">{{ field.label }}</span>
       </div>
 
       <!-- Right: action buttons -->
       <div class="flex items-center gap-0.5">
         <button
-          class="p-1 text-emerald-400 hover:text-indigo-600 hover:bg-white rounded transition-colors"
+          class="p-1 text-muted-foreground hover:text-foreground hover:bg-accent rounded transition-colors"
           title="Duplicate section"
           @click.stop="$emit('duplicate')"
         >
@@ -87,7 +87,7 @@ function onChildAdd(evt: { newIndex?: number }) {
           </svg>
         </button>
         <button
-          class="p-1 text-emerald-400 hover:text-red-500 hover:bg-white rounded transition-colors"
+          class="p-1 text-muted-foreground hover:text-destructive hover:bg-accent rounded transition-colors"
           title="Delete section"
           @click.stop="$emit('remove')"
         >
@@ -99,7 +99,7 @@ function onChildAdd(evt: { newIndex?: number }) {
     </div>
 
     <!-- Inner drop zone for child fields -->
-    <div class="bg-emerald-50/30 rounded-b-xl p-2 border-2 border-dashed border-emerald-200 min-h-16" @click.stop>
+    <div class="bg-muted/30 rounded-b-xl p-2 border-2 border-dashed border-border min-h-16" @click.stop>
       <VueDraggable
         v-model="children"
         :group="{ name: 'fields', pull: false, put: (to: any, from: any, el: any) => !el?.dataset?.groupCard && !el?.dataset?.fieldId }"
@@ -137,7 +137,7 @@ function onChildAdd(evt: { newIndex?: number }) {
       <!-- Empty state -->
       <div
         v-if="children.length === 0"
-        class="flex items-center justify-center py-4 text-emerald-400 text-xs"
+        class="flex items-center justify-center py-4 text-muted-foreground text-xs"
       >
         <p class="text-center">Drop fields here</p>
       </div>

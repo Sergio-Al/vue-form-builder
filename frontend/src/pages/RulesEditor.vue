@@ -23,6 +23,7 @@ import {
   validateNoCycles,
   restoreFlowMeta,
 } from '@/composables/useRuleSerializer'
+import { Button } from '@/components/ui/button'
 
 import '@vue-flow/core/dist/style.css'
 import '@vue-flow/core/dist/theme-default.css'
@@ -323,22 +324,22 @@ watch(fieldNames, (names) => {
 </script>
 
 <template>
-  <div v-if="loading" class="text-center py-12 text-gray-500">Loading...</div>
+  <div v-if="loading" class="text-center py-12 text-muted-foreground">Loading...</div>
 
   <div v-else class="flex flex-col h-screen">
     <!-- Header -->
     <div
-      class="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-white shrink-0"
+      class="flex items-center justify-between px-4 py-3 border-b border-border bg-background shrink-0"
     >
       <div class="flex items-center gap-3">
         <RouterLink
           :to="`/forms/${formId}/edit`"
-          class="text-gray-400 hover:text-gray-600 text-sm"
+          class="text-muted-foreground hover:text-foreground text-sm"
         >
           ← Back to Builder
         </RouterLink>
-        <span class="text-gray-300">|</span>
-        <h1 class="text-lg font-semibold text-gray-900">
+        <span class="text-border">|</span>
+        <h1 class="text-lg font-semibold text-foreground">
           Rules — {{ formName }}
         </h1>
       </div>
@@ -346,26 +347,25 @@ watch(fieldNames, (names) => {
         <span
           v-if="saveMessage"
           class="text-sm"
-          :class="saveMessage.includes('success') ? 'text-green-600' : 'text-red-500'"
+          :class="saveMessage.includes('success') ? 'text-green-600 dark:text-green-400' : 'text-destructive'"
         >
           {{ saveMessage }}
         </span>
-        <button
-          class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50"
+        <Button
           :disabled="saving"
           @click="saveRules"
         >
           {{ saving ? 'Saving...' : 'Save Rules' }}
-        </button>
+        </Button>
       </div>
     </div>
 
     <!-- Body -->
     <div class="flex flex-1 min-h-0">
       <!-- Sidebar: rule list -->
-      <div class="w-64 border-r border-gray-200 bg-gray-50 flex flex-col shrink-0">
-        <div class="p-3 border-b border-gray-200">
-          <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+      <div class="w-64 border-r border-border bg-muted flex flex-col shrink-0">
+        <div class="p-3 border-b border-border">
+          <h2 class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
             Rules ({{ rules.length }})
           </h2>
         </div>
@@ -377,20 +377,20 @@ watch(fieldNames, (names) => {
             class="group rounded-lg border cursor-pointer transition-all p-3"
             :class="
               i === selectedIndex
-                ? 'border-indigo-300 bg-indigo-50 shadow-sm'
-                : 'border-transparent hover:border-gray-200 hover:bg-white'
+                ? 'border-border bg-accent shadow-sm'
+                : 'border-transparent hover:border-border hover:bg-background'
             "
             @click="selectRule(i)"
           >
             <div class="flex items-center justify-between mb-1">
               <input
                 v-model="rule.name"
-                class="text-sm font-medium text-gray-800 bg-transparent border-none outline-none w-full mr-2"
-                :class="{ 'text-gray-400 line-through': !rule.enabled }"
+                class="text-sm font-medium text-foreground bg-transparent border-none outline-none w-full mr-2"
+                :class="{ 'text-muted-foreground line-through': !rule.enabled }"
                 @click.stop
               />
               <button
-                class="text-gray-300 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity text-lg leading-none shrink-0"
+                class="text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity text-lg leading-none shrink-0"
                 title="Delete rule"
                 @click.stop="deleteRule(i)"
               >
@@ -402,8 +402,8 @@ watch(fieldNames, (names) => {
                 class="text-[10px] px-1.5 py-0.5 rounded-full border"
                 :class="
                   rule.enabled
-                    ? 'text-green-700 bg-green-50 border-green-200'
-                    : 'text-gray-400 bg-gray-100 border-gray-200'
+                    ? 'text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800'
+                    : 'text-muted-foreground bg-muted border-border'
                 "
                 @click.stop="toggleRule(i)"
               >
@@ -411,7 +411,7 @@ watch(fieldNames, (names) => {
               </button>
               <span
                 v-if="rule.trigger?.field"
-                class="text-[10px] text-gray-400 truncate"
+                class="text-[10px] text-muted-foreground truncate"
               >
                 on {{ rule.trigger.field }}
               </span>
@@ -419,13 +419,14 @@ watch(fieldNames, (names) => {
           </div>
         </div>
 
-        <div class="p-2 border-t border-gray-200">
-          <button
-            class="w-full px-3 py-2 text-sm text-indigo-600 bg-white border border-indigo-200 rounded-lg hover:bg-indigo-50 font-medium"
+        <div class="p-2 border-t border-border">
+          <Button
+            variant="outline"
+            class="w-full"
             @click="addRule"
           >
             + New Rule
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -434,21 +435,21 @@ watch(fieldNames, (names) => {
         <!-- Toolbar -->
         <div
           v-if="selectedIndex >= 0"
-          class="flex items-center gap-2 px-4 py-2 border-b border-gray-200 bg-gray-50"
+          class="flex items-center gap-2 px-4 py-2 border-b border-border bg-muted"
         >
-          <span class="text-xs text-gray-400 mr-2">Add node:</span>
-          <button class="toolbar-btn toolbar-condition" @click="addConditionGroupNode">
+          <span class="text-xs text-muted-foreground mr-2">Add node:</span>
+          <Button variant="outline" size="sm" @click="addConditionGroupNode">
             + Condition Group
-          </button>
-          <button class="toolbar-btn toolbar-condition-single" @click="addConditionNode">
+          </Button>
+          <Button variant="outline" size="sm" @click="addConditionNode">
             + Condition
-          </button>
-          <button class="toolbar-btn toolbar-action" @click="addActionNode">
+          </Button>
+          <Button variant="outline" size="sm" @click="addActionNode">
             + Action
-          </button>
-          <button class="toolbar-btn toolbar-branch" @click="addBranchNode">
+          </Button>
+          <Button variant="outline" size="sm" @click="addBranchNode">
             + Branch
-          </button>
+          </Button>
         </div>
 
         <!-- Vue Flow canvas -->
@@ -472,7 +473,7 @@ watch(fieldNames, (names) => {
         <!-- Empty state -->
         <div
           v-else
-          class="flex-1 flex items-center justify-center text-gray-400"
+          class="flex-1 flex items-center justify-center text-muted-foreground"
         >
           <div class="text-center">
             <svg
@@ -506,51 +507,9 @@ watch(fieldNames, (names) => {
 </template>
 
 <style scoped>
-.toolbar-btn {
-  padding: 4px 10px;
-  font-size: 12px;
-  font-weight: 500;
-  border-radius: 6px;
-  border: 1px solid;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.toolbar-condition {
-  color: #92400e;
-  background: #fffbeb;
-  border-color: #fcd34d;
-}
-.toolbar-condition:hover {
-  background: #fef3c7;
-}
-.toolbar-condition-single {
-  color: #92400e;
-  background: white;
-  border-color: #fcd34d;
-}
-.toolbar-condition-single:hover {
-  background: #fffbeb;
-}
-.toolbar-action {
-  color: #3730a3;
-  background: #eef2ff;
-  border-color: #c7d2fe;
-}
-.toolbar-action:hover {
-  background: #e0e7ff;
-}
-.toolbar-branch {
-  color: #6b21a8;
-  background: #faf5ff;
-  border-color: #e9d5ff;
-}
-.toolbar-branch:hover {
-  background: #f3e8ff;
-}
-
 /* Vue Flow canvas styling */
 :deep(.vue-flow) {
-  background: #fafafa;
+  background: hsl(var(--muted));
 }
 :deep(.vue-flow__edge-path) {
   stroke-width: 2;
@@ -562,11 +521,11 @@ watch(fieldNames, (names) => {
 :deep(.vue-flow__minimap) {
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid #e5e7eb;
+  border: 1px solid hsl(var(--border));
 }
 :deep(.vue-flow__controls) {
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid #e5e7eb;
+  border: 1px solid hsl(var(--border));
 }
 </style>

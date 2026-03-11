@@ -31,13 +31,13 @@ defineProps<{
 
 <style scoped>
 .trigger-node {
-  background: white;
-  border: 1px solid #d1d5db;
-  border-left: 4px solid #22c55e;
+  background: var(--node-bg);
+  border: 1px solid var(--node-border);
+  border-left: 4px solid var(--node-trigger-accent);
   border-radius: 8px;
   min-width: 200px;
   font-size: 13px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px var(--node-shadow);
 }
 .node-header {
   display: flex;
@@ -48,16 +48,16 @@ defineProps<{
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #166534;
-  background: #f0fdf4;
-  border-bottom: 1px solid #dcfce7;
+  color: var(--node-trigger-header-text);
+  background: var(--node-trigger-header-bg);
+  border-bottom: 1px solid var(--node-trigger-header-border);
   border-radius: 7px 7px 0 0;
 }
 .header-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #22c55e;
+  background: var(--node-trigger-accent);
 }
 .node-body {
   padding: 8px 12px 10px;
@@ -65,30 +65,30 @@ defineProps<{
 .node-body label {
   display: block;
   font-size: 11px;
-  color: #6b7280;
+  color: var(--node-label);
   margin-bottom: 4px;
 }
 .node-select {
   width: 100%;
   padding: 5px 8px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--node-border);
   border-radius: 6px;
   font-size: 12px;
-  background: white;
-  color: #374151;
+  background: var(--node-bg);
+  color: var(--node-text);
 }
 .node-select:focus {
   outline: none;
-  border-color: #22c55e;
-  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.15);
+  border-color: var(--node-trigger-accent);
+  box-shadow: 0 0 0 2px var(--node-trigger-focus-shadow);
 }
 .event-badge {
   display: inline-block;
   margin-top: 6px;
   padding: 2px 8px;
   font-size: 10px;
-  color: #166534;
-  background: #dcfce7;
+  color: var(--node-trigger-header-text);
+  background: var(--node-trigger-badge-bg);
   border-radius: 9999px;
 }
 </style>

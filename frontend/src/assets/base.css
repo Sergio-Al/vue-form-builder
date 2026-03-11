@@ -1,71 +1,166 @@
-/* color palette from <https://github.com/vuejs/theme> */
+/* shadcn-vue neutral palette */
 :root {
-  --vt-c-white: #ffffff;
-  --vt-c-white-soft: #f8f8f8;
-  --vt-c-white-mute: #f2f2f2;
+  --background: 0 0% 100%;
+  --foreground: 0 0% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 3.9%;
+  --primary: 0 0% 9%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 0 0% 96.1%;
+  --secondary-foreground: 0 0% 9%;
+  --muted: 0 0% 96.1%;
+  --muted-foreground: 0 0% 45.1%;
+  --accent: 0 0% 96.1%;
+  --accent-foreground: 0 0% 9%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 89.8%;
+  --input: 0 0% 89.8%;
+  --ring: 0 0% 3.9%;
+  --radius: 0.5rem;
 
-  --vt-c-black: #181818;
-  --vt-c-black-soft: #222222;
-  --vt-c-black-mute: #282828;
+  /* Rule-node shared */
+  --node-bg: #ffffff;
+  --node-border: #d1d5db;
+  --node-text: #374151;
+  --node-label: #6b7280;
+  --node-shadow: rgba(0, 0, 0, 0.08);
 
-  --vt-c-indigo: #2c3e50;
+  /* Trigger (green) */
+  --node-trigger-accent: #22c55e;
+  --node-trigger-header-bg: #f0fdf4;
+  --node-trigger-header-text: #166534;
+  --node-trigger-header-border: #dcfce7;
+  --node-trigger-badge-bg: #dcfce7;
+  --node-trigger-focus-shadow: rgba(34, 197, 94, 0.15);
 
-  --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
-  --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
-  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
-  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
+  /* Condition (amber) */
+  --node-condition-accent: #f59e0b;
+  --node-condition-header-bg: #fffbeb;
+  --node-condition-header-text: #92400e;
+  --node-condition-header-border: #fef3c7;
+  --node-condition-focus-shadow: rgba(245, 158, 11, 0.15);
+  --node-condition-add-border: #fcd34d;
+  --node-condition-add-hover: #fef3c7;
+  --node-condition-toggle-bg: #ffffff;
+  --node-condition-toggle-border: #e5e7eb;
+  --node-condition-toggle-text: #6b7280;
+  --node-condition-remove-bg: #fee2e2;
+  --node-condition-remove-text: #dc2626;
+  --node-condition-remove-hover: #fecaca;
 
-  --vt-c-text-light-1: var(--vt-c-indigo);
-  --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
-  --vt-c-text-dark-1: var(--vt-c-white);
-  --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
+  /* Action (indigo) */
+  --node-action-accent: #6366f1;
+  --node-action-header-bg: #eef2ff;
+  --node-action-header-text: #3730a3;
+  --node-action-header-border: #e0e7ff;
+  --node-action-focus-shadow: rgba(99, 102, 241, 0.15);
+
+  /* Branch (purple) */
+  --node-branch-accent: #a855f7;
+  --node-branch-header-bg: #faf5ff;
+  --node-branch-header-text: #6b21a8;
+  --node-branch-header-border: #f3e8ff;
+
+  /* Handle labels (true/false) */
+  --node-handle-true-text: #166534;
+  --node-handle-true-bg: #dcfce7;
+  --node-handle-false-text: #991b1b;
+  --node-handle-false-bg: #fee2e2;
+
+  /* Branch labels */
+  --node-branch-true-text: #166534;
+  --node-branch-false-text: #991b1b;
 }
 
-/* semantic color variables for this project */
-:root {
-  --color-background: var(--vt-c-white);
-  --color-background-soft: var(--vt-c-white-soft);
-  --color-background-mute: var(--vt-c-white-mute);
+.dark {
+  --background: 0 0% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 0 0% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 0 0% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 0 0% 9%;
+  --secondary: 0 0% 14.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 0 0% 14.9%;
+  --muted-foreground: 0 0% 63.9%;
+  --accent: 0 0% 14.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 14.9%;
+  --input: 0 0% 14.9%;
+  --ring: 0 0% 83.1%;
 
-  --color-border: var(--vt-c-divider-light-2);
-  --color-border-hover: var(--vt-c-divider-light-1);
+  /* Rule-node shared */
+  --node-bg: #1c1c1c;
+  --node-border: #404040;
+  --node-text: #e5e5e5;
+  --node-label: #a3a3a3;
+  --node-shadow: rgba(0, 0, 0, 0.3);
 
-  --color-heading: var(--vt-c-text-light-1);
-  --color-text: var(--vt-c-text-light-1);
+  /* Trigger (green) */
+  --node-trigger-accent: #4ade80;
+  --node-trigger-header-bg: #052e16;
+  --node-trigger-header-text: #86efac;
+  --node-trigger-header-border: #14532d;
+  --node-trigger-badge-bg: #14532d;
+  --node-trigger-focus-shadow: rgba(74, 222, 128, 0.2);
 
-  --section-gap: 160px;
-}
+  /* Condition (amber) */
+  --node-condition-accent: #fbbf24;
+  --node-condition-header-bg: #451a03;
+  --node-condition-header-text: #fcd34d;
+  --node-condition-header-border: #78350f;
+  --node-condition-focus-shadow: rgba(251, 191, 36, 0.2);
+  --node-condition-add-border: #92400e;
+  --node-condition-add-hover: #78350f;
+  --node-condition-toggle-bg: #262626;
+  --node-condition-toggle-border: #404040;
+  --node-condition-toggle-text: #a3a3a3;
+  --node-condition-remove-bg: #450a0a;
+  --node-condition-remove-text: #f87171;
+  --node-condition-remove-hover: #7f1d1d;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: var(--vt-c-black);
-    --color-background-soft: var(--vt-c-black-soft);
-    --color-background-mute: var(--vt-c-black-mute);
+  /* Action (indigo) */
+  --node-action-accent: #818cf8;
+  --node-action-header-bg: #1e1b4b;
+  --node-action-header-text: #a5b4fc;
+  --node-action-header-border: #312e81;
+  --node-action-focus-shadow: rgba(129, 140, 248, 0.2);
 
-    --color-border: var(--vt-c-divider-dark-2);
-    --color-border-hover: var(--vt-c-divider-dark-1);
+  /* Branch (purple) */
+  --node-branch-accent: #c084fc;
+  --node-branch-header-bg: #3b0764;
+  --node-branch-header-text: #d8b4fe;
+  --node-branch-header-border: #581c87;
 
-    --color-heading: var(--vt-c-text-dark-1);
-    --color-text: var(--vt-c-text-dark-2);
-  }
+  /* Handle labels (true/false) */
+  --node-handle-true-text: #86efac;
+  --node-handle-true-bg: #14532d;
+  --node-handle-false-text: #fca5a5;
+  --node-handle-false-bg: #450a0a;
+
+  /* Branch labels */
+  --node-branch-true-text: #86efac;
+  --node-branch-false-text: #fca5a5;
 }
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
-  margin: 0;
-  font-weight: normal;
+  border-color: hsl(var(--border));
 }
 
 body {
   min-height: 100vh;
-  color: var(--color-text);
-  background: var(--color-background);
-  transition:
-    color 0.5s,
-    background-color 0.5s;
-  line-height: 1.6;
+  color: hsl(var(--foreground));
+  background: hsl(var(--background));
   font-family:
     Inter,
     -apple-system,
@@ -80,6 +175,7 @@ body {
     'Helvetica Neue',
     sans-serif;
   font-size: 15px;
+  line-height: 1.6;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

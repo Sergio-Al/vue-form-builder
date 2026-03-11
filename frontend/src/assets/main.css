@@ -1,1 +1,75 @@
 @import "tailwindcss";
+@import "./base.css";
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --radius: var(--radius);
+}
+
+/* Vueform theme overrides — neutral light */
+:root {
+  --vf-primary: #171717;
+  --vf-primary-darker: #0a0a0a;
+  --vf-bg-input: #ffffff;
+  --vf-bg-input-hover: #ffffff;
+  --vf-bg-input-focus: #ffffff;
+  --vf-bg-input-danger: #ffffff;
+  --vf-bg-disabled: #f5f5f5;
+  --vf-bg-selected: #171717;
+  --vf-color-input: #171717;
+  --vf-color-input-hover: #171717;
+  --vf-color-input-focus: #171717;
+  --vf-color-input-danger: #171717;
+  --vf-color-disabled: #a3a3a3;
+  --vf-color-placeholder: #a3a3a3;
+  --vf-color-on-primary: #fafafa;
+  --vf-border-color-input: #e5e5e5;
+  --vf-border-color-input-hover: #d4d4d4;
+  --vf-border-color-input-focus: #171717;
+  --vf-border-color-input-danger: #ef4444;
+  --vf-ring-color: rgba(23, 23, 23, 0.15);
+  --vf-ring-danger-color: rgba(239, 68, 68, 0.15);
+}
+
+/* Vueform theme overrides — dark */
+.dark {
+  --vf-primary: #fafafa;
+  --vf-primary-darker: #e5e5e5;
+  --vf-bg-input: #1c1c1c;
+  --vf-bg-input-hover: #1c1c1c;
+  --vf-bg-input-focus: #1c1c1c;
+  --vf-bg-input-danger: #1c1c1c;
+  --vf-bg-disabled: #262626;
+  --vf-bg-selected: #fafafa;
+  --vf-color-input: #fafafa;
+  --vf-color-input-hover: #fafafa;
+  --vf-color-input-focus: #fafafa;
+  --vf-color-input-danger: #fafafa;
+  --vf-color-disabled: #525252;
+  --vf-color-placeholder: #525252;
+  --vf-color-on-primary: #171717;
+  --vf-border-color-input: #404040;
+  --vf-border-color-input-hover: #525252;
+  --vf-border-color-input-focus: #fafafa;
+  --vf-border-color-input-danger: #dc2626;
+  --vf-ring-color: rgba(250, 250, 250, 0.15);
+  --vf-ring-danger-color: rgba(220, 38, 38, 0.2);
+}

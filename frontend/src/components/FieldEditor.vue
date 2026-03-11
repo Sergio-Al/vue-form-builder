@@ -54,14 +54,14 @@ function autoSlugify(value: string) {
 </script>
 
 <template>
-  <div class="bg-white border border-gray-200 rounded-lg p-3 shadow-sm">
+  <div class="bg-card border border-border rounded-lg p-3 shadow-sm">
     <div class="flex items-center justify-between mb-2">
       <!-- Type badge -->
-      <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
+      <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-secondary text-secondary-foreground border border-border">
         {{ typeLabel }}
       </span>
       <button
-        class="p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+        class="p-1 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded transition-colors"
         title="Delete field"
         @click="emit('remove')"
       >
@@ -74,11 +74,11 @@ function autoSlugify(value: string) {
     <div class="space-y-2">
       <!-- Field Name -->
       <div>
-        <label class="block text-[10px] font-medium text-gray-500 mb-0.5">Name (key)</label>
+        <label class="block text-[10px] font-medium text-muted-foreground mb-0.5">Name (key)</label>
         <input
           type="text"
           :value="field.name"
-          class="w-full border border-gray-300 rounded px-2 py-1 text-xs"
+          class="w-full border border-input bg-transparent rounded px-2 py-1 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
           placeholder="e.g. full_name"
           @input="update({ name: autoSlugify(($event.target as HTMLInputElement).value) })"
         />
@@ -86,11 +86,11 @@ function autoSlugify(value: string) {
 
       <!-- Label -->
       <div>
-        <label class="block text-[10px] font-medium text-gray-500 mb-0.5">Label</label>
+        <label class="block text-[10px] font-medium text-muted-foreground mb-0.5">Label</label>
         <input
           type="text"
           :value="field.label"
-          class="w-full border border-gray-300 rounded px-2 py-1 text-xs"
+          class="w-full border border-input bg-transparent rounded px-2 py-1 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
           placeholder="e.g. Full Name"
           @input="update({ label: ($event.target as HTMLInputElement).value })"
         />
@@ -98,22 +98,22 @@ function autoSlugify(value: string) {
 
       <!-- Placeholder -->
       <div v-if="showPlaceholder && !isGroup">
-        <label class="block text-[10px] font-medium text-gray-500 mb-0.5">Placeholder</label>
+        <label class="block text-[10px] font-medium text-muted-foreground mb-0.5">Placeholder</label>
         <input
           type="text"
           :value="field.placeholder"
-          class="w-full border border-gray-300 rounded px-2 py-1 text-xs"
+          class="w-full border border-input bg-transparent rounded px-2 py-1 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
           @input="update({ placeholder: ($event.target as HTMLInputElement).value })"
         />
       </div>
 
       <!-- Required + Extra Rules row -->
       <div v-if="!isGroup" class="flex items-center gap-3">
-        <label class="flex items-center gap-1.5 text-xs text-gray-700">
+        <label class="flex items-center gap-1.5 text-xs text-foreground">
           <input
             type="checkbox"
             :checked="field.required"
-            class="rounded w-3.5 h-3.5"
+            class="rounded w-3.5 h-3.5 accent-primary"
             @change="update({ required: ($event.target as HTMLInputElement).checked })"
           />
           Required
@@ -122,11 +122,11 @@ function autoSlugify(value: string) {
 
       <!-- Extra Rules -->
       <div v-if="!isGroup">
-        <label class="block text-[10px] font-medium text-gray-500 mb-0.5">Validation Rules</label>
+        <label class="block text-[10px] font-medium text-muted-foreground mb-0.5">Validation Rules</label>
         <input
           type="text"
           :value="field.extraRules"
-          class="w-full border border-gray-300 rounded px-2 py-1 text-xs"
+          class="w-full border border-input bg-transparent rounded px-2 py-1 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
           placeholder="e.g. min:3|max:100"
           @input="update({ extraRules: ($event.target as HTMLInputElement).value })"
         />
@@ -134,15 +134,15 @@ function autoSlugify(value: string) {
 
       <!-- Width (columns) -->
       <div>
-        <label class="block text-[10px] font-medium text-gray-500 mb-1">Width</label>
-        <div class="flex rounded-md border border-gray-300 overflow-hidden">
+        <label class="block text-[10px] font-medium text-muted-foreground mb-1">Width</label>
+        <div class="flex rounded-md border border-border overflow-hidden">
           <button
             v-for="opt in [{ label: 'Full', value: 12 }, { label: '1/2', value: 6 }, { label: '1/3', value: 4 }, { label: '1/4', value: 3 }]"
             :key="opt.value"
-            class="flex-1 px-1 py-1 text-[10px] font-medium transition-colors border-r last:border-r-0 border-gray-300"
+            class="flex-1 px-1 py-1 text-[10px] font-medium transition-colors border-r last:border-r-0 border-border"
             :class="(field.columns ?? 12) === opt.value
-              ? 'bg-indigo-500 text-white'
-              : 'bg-white text-gray-600 hover:bg-gray-50'"
+              ? 'bg-primary text-primary-foreground'
+              : 'bg-card text-foreground hover:bg-accent'"
             @click="update({ columns: opt.value })"
           >
             {{ opt.label }}
@@ -151,39 +151,39 @@ function autoSlugify(value: string) {
       </div>
       <!-- Children count indicator for groups -->
       <div v-if="isGroup" class="pt-1">
-        <p class="text-[10px] text-gray-400">
+        <p class="text-[10px] text-muted-foreground">
           {{ (field.children?.length ?? 0) }} field(s) inside this section
         </p>
       </div>
     </div>
 
     <!-- Options Editor -->
-    <div v-if="needsOptions && !isGroup" class="mt-2 border-t pt-2">
-      <label class="block text-[10px] font-medium text-gray-500 mb-1">Options</label>
+    <div v-if="needsOptions && !isGroup" class="mt-2 border-t border-border pt-2">
+      <label class="block text-[10px] font-medium text-muted-foreground mb-1">Options</label>
       <div v-for="(opt, i) in field.options" :key="i" class="flex gap-1 mb-1.5">
         <input
           type="text"
           :value="opt.value"
-          class="flex-1 border border-gray-300 rounded px-1.5 py-0.5 text-xs"
+          class="flex-1 border border-input bg-transparent rounded px-1.5 py-0.5 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
           placeholder="Value"
           @input="updateOption(i, 'value', ($event.target as HTMLInputElement).value)"
         />
         <input
           type="text"
           :value="opt.label"
-          class="flex-1 border border-gray-300 rounded px-1.5 py-0.5 text-xs"
+          class="flex-1 border border-input bg-transparent rounded px-1.5 py-0.5 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
           placeholder="Label"
           @input="updateOption(i, 'label', ($event.target as HTMLInputElement).value)"
         />
         <button
-          class="text-red-400 hover:text-red-600 text-xs px-0.5"
+          class="text-destructive hover:text-destructive/80 text-xs px-0.5"
           @click="removeOption(i)"
         >
           ✕
         </button>
       </div>
       <button
-        class="text-xs text-indigo-600 hover:text-indigo-800"
+        class="text-xs text-foreground hover:text-foreground/80 font-medium"
         @click="addOption"
       >
         + Add Option

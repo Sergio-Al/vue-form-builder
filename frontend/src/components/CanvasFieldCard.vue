@@ -30,8 +30,8 @@ const hasSchema = computed(() => Object.keys(fieldSchema.value).length > 0)
   <div
     class="relative rounded-lg cursor-pointer transition-all select-none group pt-6"
     :class="selected
-      ? 'ring-2 ring-indigo-400 shadow-sm'
-      : 'hover:ring-2 hover:ring-gray-300'"
+      ? 'ring-2 ring-ring shadow-sm'
+      : 'hover:ring-2 hover:ring-border'"
     :style="{ gridColumn: `span ${columns}` }"
     :data-field-id="field.id"
     @click="$emit('select')"
@@ -43,7 +43,7 @@ const hasSchema = computed(() => Object.keys(fieldSchema.value).length > 0)
     >
       <!-- Left: drag handle + name badge -->
       <div class="flex items-center gap-1">
-        <span class="drag-handle cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 transition-colors">
+        <span class="drag-handle cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground transition-colors">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <circle cx="9" cy="5" r="1.5" /><circle cx="15" cy="5" r="1.5" />
             <circle cx="9" cy="10" r="1.5" /><circle cx="15" cy="10" r="1.5" />
@@ -51,7 +51,7 @@ const hasSchema = computed(() => Object.keys(fieldSchema.value).length > 0)
             <circle cx="9" cy="20" r="1.5" /><circle cx="15" cy="20" r="1.5" />
           </svg>
         </span>
-        <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-indigo-500 text-white shadow-sm">
+        <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-primary text-primary-foreground shadow-sm">
           {{ field.name || catalogEntry?.label || field.type }}
         </span>
       </div>
@@ -59,7 +59,7 @@ const hasSchema = computed(() => Object.keys(fieldSchema.value).length > 0)
       <!-- Right: action buttons -->
       <div class="flex items-center gap-0.5">
         <button
-          class="p-1 text-gray-400 hover:text-indigo-600 hover:bg-white rounded transition-colors"
+          class="p-1 text-muted-foreground hover:text-foreground hover:bg-accent rounded transition-colors"
           title="Duplicate field"
           @click.stop="$emit('duplicate')"
         >
@@ -68,7 +68,7 @@ const hasSchema = computed(() => Object.keys(fieldSchema.value).length > 0)
           </svg>
         </button>
         <button
-          class="p-1 text-gray-400 hover:text-red-500 hover:bg-white rounded transition-colors"
+          class="p-1 text-muted-foreground hover:text-destructive hover:bg-accent rounded transition-colors"
           title="Delete field"
           @click.stop="$emit('remove')"
         >
@@ -80,7 +80,7 @@ const hasSchema = computed(() => Object.keys(fieldSchema.value).length > 0)
     </div>
 
     <!-- Non-fillable Vueform field preview -->
-    <div class="pointer-events-none bg-white rounded-lg px-3 py-2 min-h-10">
+    <div class="pointer-events-none bg-card rounded-lg px-3 py-2 min-h-10">
       <Vueform
         v-if="hasSchema"
         :schema="fieldSchema"
@@ -88,7 +88,7 @@ const hasSchema = computed(() => Object.keys(fieldSchema.value).length > 0)
         :display-errors="false"
         size="sm"
       />
-      <div v-else class="flex items-center gap-2 py-2 text-sm text-gray-400">
+      <div v-else class="flex items-center gap-2 py-2 text-sm text-muted-foreground">
         <span>{{ catalogEntry?.icon ?? '📦' }}</span>
         <span>{{ catalogEntry?.label || field.type }}</span>
       </div>

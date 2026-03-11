@@ -58,13 +58,13 @@ const needsValue = computed(() => {
 
 <style scoped>
 .action-node {
-  background: white;
-  border: 1px solid #d1d5db;
-  border-left: 4px solid #6366f1;
+  background: var(--node-bg);
+  border: 1px solid var(--node-border);
+  border-left: 4px solid var(--node-action-accent);
   border-radius: 8px;
   min-width: 200px;
   font-size: 13px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px var(--node-shadow);
 }
 .node-header {
   display: flex;
@@ -75,16 +75,16 @@ const needsValue = computed(() => {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #3730a3;
-  background: #eef2ff;
-  border-bottom: 1px solid #e0e7ff;
+  color: var(--node-action-header-text);
+  background: var(--node-action-header-bg);
+  border-bottom: 1px solid var(--node-action-header-border);
   border-radius: 7px 7px 0 0;
 }
 .header-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #6366f1;
+  background: var(--node-action-accent);
 }
 .node-body {
   padding: 8px 12px 10px;
@@ -93,17 +93,17 @@ const needsValue = computed(() => {
 .node-input {
   width: 100%;
   padding: 5px 8px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--node-border);
   border-radius: 6px;
   font-size: 12px;
-  background: white;
-  color: #374151;
+  background: var(--node-bg);
+  color: var(--node-text);
 }
 .node-select:focus,
 .node-input:focus {
   outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+  border-color: var(--node-action-accent);
+  box-shadow: 0 0 0 2px var(--node-action-focus-shadow);
 }
 .mt-1 {
   margin-top: 4px;

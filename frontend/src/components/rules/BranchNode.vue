@@ -40,13 +40,13 @@ defineProps<{
 <style scoped>
 .branch-node {
   position: relative;
-  background: white;
-  border: 1px solid #d1d5db;
-  border-left: 4px solid #a855f7;
+  background: var(--node-bg);
+  border: 1px solid var(--node-border);
+  border-left: 4px solid var(--node-branch-accent);
   border-radius: 8px;
   min-width: 140px;
   font-size: 13px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px var(--node-shadow);
 }
 .node-header {
   display: flex;
@@ -57,16 +57,16 @@ defineProps<{
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #6b21a8;
-  background: #faf5ff;
-  border-bottom: 1px solid #f3e8ff;
+  color: var(--node-branch-header-text);
+  background: var(--node-branch-header-bg);
+  border-bottom: 1px solid var(--node-branch-header-border);
   border-radius: 7px 7px 0 0;
 }
 .header-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #a855f7;
+  background: var(--node-branch-accent);
 }
 .node-body {
   padding: 8px 12px 10px;
@@ -78,12 +78,12 @@ defineProps<{
 }
 .branch-true {
   font-size: 12px;
-  color: #166534;
+  color: var(--node-branch-true-text);
   font-weight: 500;
 }
 .branch-false {
   font-size: 12px;
-  color: #991b1b;
+  color: var(--node-branch-false-text);
   font-weight: 500;
 }
 .handle-label {
@@ -101,11 +101,11 @@ defineProps<{
   pointer-events: none;
 }
 .handle-true {
-  color: #166534;
-  background: #dcfce7;
+  color: var(--node-handle-true-text);
+  background: var(--node-handle-true-bg);
 }
 .handle-false {
-  color: #991b1b;
-  background: #fee2e2;
+  color: var(--node-handle-false-text);
+  background: var(--node-handle-false-bg);
 }
 </style>

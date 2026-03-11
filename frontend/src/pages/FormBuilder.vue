@@ -15,6 +15,8 @@ import {
   type FieldConfig,
 } from '@/composables/useSchemaBuilder'
 import { createForm, updateForm, getForm } from '@/services/api'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
 const route = useRoute()
 const router = useRouter()
@@ -214,49 +216,47 @@ async function save() {
 </script>
 
 <template>
-  <div v-if="loading" class="text-center py-12 text-gray-500">Loading...</div>
+  <div v-if="loading" class="text-center py-12 text-muted-foreground">Loading...</div>
 
   <div v-else class="flex flex-col h-full">
     <!-- Header -->
     <div class="flex items-center justify-between mb-4">
-      <h1 class="text-2xl font-bold text-gray-900">
+      <h1 class="text-2xl font-bold text-foreground">
         {{ isEdit ? 'Edit Form' : 'New Form' }}
       </h1>
       <div class="flex items-center gap-2">
-        <RouterLink
+        <Button
           v-if="isEdit && editId"
-          :to="`/forms/${editId}/rules`"
-          class="border border-amber-300 text-amber-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-amber-50"
+          variant="outline"
+          size="sm"
+          as-child
         >
-          Rules
-        </RouterLink>
-        <button
-          class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50"
+          <RouterLink :to="`/forms/${editId}/rules`">Rules</RouterLink>
+        </Button>
+        <Button
           :disabled="saving"
           @click="save"
         >
           {{ saving ? 'Saving...' : 'Save Form' }}
-        </button>
+        </Button>
       </div>
     </div>
 
     <!-- Form metadata -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Form Name</label>
-        <input
+        <label class="block text-sm font-medium text-foreground mb-1">Form Name</label>
+        <Input
           v-model="formName"
           type="text"
-          class="w-full border border-gray-300 rounded-lg px-3 py-2"
           placeholder="e.g. Job Application"
         />
       </div>
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-        <input
+        <label class="block text-sm font-medium text-foreground mb-1">Description</label>
+        <Input
           v-model="formDescription"
           type="text"
-          class="w-full border border-gray-300 rounded-lg px-3 py-2"
           placeholder="Optional description"
         />
       </div>
@@ -265,7 +265,7 @@ async function save() {
     <!-- Three-column layout: palette | canvas | properties -->
     <div class="flex gap-0 flex-1 min-h-0">
       <!-- Left: Palette sidebar -->
-      <div class="w-52 shrink-0 border-r border-gray-200 pr-4 overflow-y-auto">
+      <div class="w-52 shrink-0 border-r border-border pr-4 overflow-y-auto">
         <FieldPalette />
       </div>
 
@@ -274,12 +274,11 @@ async function save() {
         <div class="max-w-lg mx-auto">
           <!-- Canvas header -->
           <div class="flex items-center justify-between mb-3">
-            <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Canvas</h2>
-            <button
-              class="flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-md transition-colors"
-              :class="showPreview
-                ? 'bg-indigo-100 text-indigo-700'
-                : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'"
+            <h2 class="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Canvas</h2>
+            <Button
+              variant="ghost"
+              size="sm"
+              :class="showPreview ? 'bg-accent text-accent-foreground' : 'text-muted-foreground'"
               @click="showPreview = !showPreview"
             >
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -287,19 +286,18 @@ async function save() {
                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
               </svg>
               Preview
-            </button>
-            <button
-              class="flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-md transition-colors"
-              :class="showSchema
-                ? 'bg-indigo-100 text-indigo-700'
-                : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'"
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              :class="showSchema ? 'bg-accent text-accent-foreground' : 'text-muted-foreground'"
               @click="showSchema = !showSchema"
             >
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
               </svg>
               JSON Schema
-            </button>
+            </Button>
           </div>
 
           <!-- Drop zone -->
@@ -312,8 +310,8 @@ async function save() {
             chosen-class="chosen-field"
             class="grid grid-cols-12 gap-2 min-h-50 p-3 border-2 border-dashed rounded-xl transition-colors"
             :class="dragging
-              ? 'border-indigo-300 bg-indigo-50/30'
-              : 'border-gray-200 bg-gray-50/50'"
+              ? 'border-ring bg-accent/30'
+              : 'border-border bg-muted/50'"
             @start="dragging = true"
             @end="dragging = false"
             @add="onCanvasAdd"
@@ -347,7 +345,7 @@ async function save() {
           <!-- Canvas empty state -->
           <div
             v-if="fields.length === 0 && !dragging"
-            class="flex flex-col items-center justify-center py-10 text-gray-400 -mt-50"
+            class="flex flex-col items-center justify-center py-10 text-muted-foreground -mt-50"
           >
             <svg class="w-10 h-10 mb-2 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -362,28 +360,27 @@ async function save() {
 
           <!-- Toggleable JSON schema viewer -->
           <div v-if="showSchema" class="mt-4">
-            <div class="bg-gray-900 rounded-xl overflow-hidden">
-              <div class="flex items-center justify-between px-4 py-2 bg-gray-800">
-                <span class="text-xs font-medium text-gray-400">JSON Schema</span>
-                <button
-                  class="text-xs font-medium px-2 py-1 rounded transition-colors"
-                  :class="schemaCopied
-                    ? 'text-green-400'
-                    : 'text-gray-400 hover:text-white'"
+            <div class="bg-secondary rounded-xl overflow-hidden border border-border">
+              <div class="flex items-center justify-between px-4 py-2 border-b border-border">
+                <span class="text-xs font-medium text-muted-foreground">JSON Schema</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  :class="schemaCopied ? 'text-green-500' : 'text-muted-foreground'"
                   @click="copySchema"
                 >
                   {{ schemaCopied ? 'Copied!' : 'Copy' }}
-                </button>
+                </Button>
               </div>
-              <pre class="p-4 text-sm text-green-300 overflow-x-auto max-h-96 overflow-y-auto">{{ JSON.stringify(schema, null, 2) }}</pre>
+              <pre class="p-4 text-sm text-foreground overflow-x-auto max-h-96 overflow-y-auto">{{ JSON.stringify(schema, null, 2) }}</pre>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Right: Properties sidebar (static, for selected field) -->
-      <div class="w-80 shrink-0 border-l border-gray-200 pl-4 overflow-y-auto">
-        <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Properties</h2>
+      <div class="w-80 shrink-0 border-l border-border pl-4 overflow-y-auto">
+        <h2 class="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">Properties</h2>
 
         <div v-if="selectedField && selectedPath !== null">
           <FieldEditor
@@ -404,7 +401,7 @@ async function save() {
 
         <div
           v-else
-          class="flex flex-col items-center justify-center py-16 text-gray-400"
+          class="flex flex-col items-center justify-center py-16 text-muted-foreground"
         >
           <svg class="w-8 h-8 mb-2 opacity-40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
@@ -419,14 +416,14 @@ async function save() {
 <style scoped>
 :deep(.ghost-field) {
   opacity: 0.4;
-  border: 2px dashed #6366f1;
+  border: 2px dashed hsl(var(--ring));
   border-radius: 0.5rem;
   grid-column: span 12 !important;
   min-height: 3rem;
 }
 
 :deep(.chosen-field) {
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.3);
   border-radius: 0.5rem;
 }
 </style>

@@ -108,13 +108,13 @@ function needsValue(op: string) {
 <style scoped>
 .condition-group-node {
   position: relative;
-  background: white;
-  border: 1px solid #d1d5db;
-  border-left: 4px solid #f59e0b;
+  background: var(--node-bg);
+  border: 1px solid var(--node-border);
+  border-left: 4px solid var(--node-condition-accent);
   border-radius: 8px;
   min-width: 320px;
   font-size: 13px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px var(--node-shadow);
 }
 .node-header {
   display: flex;
@@ -125,21 +125,21 @@ function needsValue(op: string) {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #92400e;
-  background: #fffbeb;
-  border-bottom: 1px solid #fef3c7;
+  color: var(--node-condition-header-text);
+  background: var(--node-condition-header-bg);
+  border-bottom: 1px solid var(--node-condition-header-border);
   border-radius: 7px 7px 0 0;
 }
 .header-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #f59e0b;
+  background: var(--node-condition-accent);
 }
 .operator-toggle {
   margin-left: auto;
   display: flex;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--node-condition-toggle-border);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -147,13 +147,13 @@ function needsValue(op: string) {
   padding: 2px 8px;
   font-size: 10px;
   font-weight: 600;
-  background: white;
+  background: var(--node-condition-toggle-bg);
   border: none;
   cursor: pointer;
-  color: #6b7280;
+  color: var(--node-condition-toggle-text);
 }
 .toggle-btn.active {
-  background: #f59e0b;
+  background: var(--node-condition-accent);
   color: white;
 }
 .node-body {
@@ -171,17 +171,17 @@ function needsValue(op: string) {
 .node-select,
 .node-input {
   padding: 5px 6px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--node-border);
   border-radius: 6px;
   font-size: 11px;
-  background: white;
-  color: #374151;
+  background: var(--node-bg);
+  color: var(--node-text);
 }
 .node-select:focus,
 .node-input:focus {
   outline: none;
-  border-color: #f59e0b;
-  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.15);
+  border-color: var(--node-condition-accent);
+  box-shadow: 0 0 0 2px var(--node-condition-focus-shadow);
 }
 .field-select {
   flex: 1;
@@ -202,8 +202,8 @@ function needsValue(op: string) {
   align-items: center;
   justify-content: center;
   border: none;
-  background: #fee2e2;
-  color: #dc2626;
+  background: var(--node-condition-remove-bg);
+  color: var(--node-condition-remove-text);
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
@@ -211,21 +211,21 @@ function needsValue(op: string) {
   flex-shrink: 0;
 }
 .remove-btn:hover {
-  background: #fecaca;
+  background: var(--node-condition-remove-hover);
 }
 .add-btn {
   margin-top: 6px;
   padding: 3px 8px;
   font-size: 11px;
-  color: #92400e;
-  background: #fffbeb;
-  border: 1px dashed #fcd34d;
+  color: var(--node-condition-header-text);
+  background: var(--node-condition-header-bg);
+  border: 1px dashed var(--node-condition-add-border);
   border-radius: 4px;
   cursor: pointer;
   width: 100%;
 }
 .add-btn:hover {
-  background: #fef3c7;
+  background: var(--node-condition-add-hover);
 }
 .handle-label {
   position: absolute;
@@ -242,11 +242,11 @@ function needsValue(op: string) {
   pointer-events: none;
 }
 .handle-true {
-  color: #166534;
-  background: #dcfce7;
+  color: var(--node-handle-true-text);
+  background: var(--node-handle-true-bg);
 }
 .handle-false {
-  color: #991b1b;
-  background: #fee2e2;
+  color: var(--node-handle-false-text);
+  background: var(--node-handle-false-bg);
 }
 </style>
